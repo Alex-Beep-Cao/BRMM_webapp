@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- driver_list is the variable passed in containing the list of drivers -->
+<!-- Add code to display a list of drivers -->
+
+<h2>overall result</h2>
+
+<div class="container">
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Driver</th>
+            <th scope="col">Course</th>
+            <th scope="col">Course Time</th>
+            
+        </tr>
+
+        {% for course_time in course_time_list %}
+            <tr>
+                <td>{{ course_time[0] }}</td>
+                <td>{{ course_time[1] }}</td>
+                <td>{{ course_time[2] }}</td>
+                
+            </tr>
+        {% endfor %}
+
+   </table>
+
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Driver</th>
+            <th scope="col">Driver Name</th>
+            <th scope="col">Car Model</th>
+            <th scope="col">Overall Result</th>
+        </tr>
+
+        {% for i in range (display_result|length) %} 
+          <tr>
+            {% if i == 0 %}
+                <th scope="col">{{ display_result[i][0] }}  </th>
+            
+            {% elif i > 0 and i <= 4 %}
+                <th scope="col">{{ display_result[i][0] }} md </th>
+            {% else %}
+                <th scope="col">{{ display_result[i][0] }}  </th>
+            {% endif %}
+            <th scope="col">{{ display_result[i][2] }}</th>
+            <th scope="col">{{ display_result[i][3] }}</th>
+            <th scope="col">{{ display_result[i][1] }}</th>
+                
+          </tr>
+
+        {% endfor%}
+      
+    </table>
+</div>
+
+{% endblock %}

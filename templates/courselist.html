@@ -5,19 +5,21 @@
 <h3>current competition courses</h3>
 
 <!-- code to display list of courses-->
-<table>
-    <tr>
-        <th>Course</th>
-        <th>Name</th>
-        <th>Map diagram</th>
-    </tr>
-    {% for course in course_list %}
+<div class="container">
+    <table class="table table-striped">
         <tr>
-            {% for field in course %}
-                <td>{{field}}</td>
-            {% endfor %}
+            <th scope="col">Course</th>
+            <th scope="col">Name</th>
+            <th scope="col">Map diagram</th>
         </tr>
-    {% endfor %}
-</table>
-
+        {% for course in course_list %}
+        
+            <tr>
+                <td>{{ course[0] }} </td>
+                <td>{{ course[1] }}</td>
+                <td><img src="{{ url_for('static', filename=course[2]) }}" alt="course[2]" class="img-fluid" width="150" height="100">  </td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
 {% endblock %}

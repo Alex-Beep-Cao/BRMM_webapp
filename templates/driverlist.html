@@ -5,8 +5,34 @@
 
 <h2>Driver List</h2>
 
-<p>For the Milestone submission, this page just needs to display this text successfully in your browser.</p>
-
-<p>Add the driver list here for your final submission.</p>
+<div class="container">
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Driver</th>
+            <th scope="col">Driver Name</th>
+            <th scope="col">Date of Birth</th>
+            <th scope="col">Age</th>
+            <th scope="col">Caregiver</th>
+            <th scope="col">Car Model</th>
+            <th scope="col">Driver Class</th>
+        </tr>
+        {% for driver in driver_list %}
+        
+            <tr>
+                <td>{{ driver[0] }} </td>
+                {% if  driver[4]|int >= 12 and driver[4]|int <= 25 and driver[4]|int != 0 %}
+                    <td class="text-warning bg-dark">{{ driver[2] }} {{ driver[1] }}</td>
+                {% else %}
+                    <td ><a href="{{ url_for('listruns',driverid = driver[0]) }}">{{ driver[2] }} {{ driver[1] }}</a></td>
+                {% endif %}
+                <td>{{ driver[3] }}</td>
+                <td>{{ driver[4] }}</td>
+                <td>{{ driver[5] }}</td>
+                <td>{{ driver[8] }}</td>
+                <td>{{ driver[9] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</div>
 
 {% endblock %}
