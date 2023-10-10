@@ -1,0 +1,69 @@
+{% extends "admin.html" %}
+{% block content %}
+
+<h2>Add Driver</h2>
+
+<div class="container">
+    <form class="row g-3 was-validated" method="POST" action="/add">
+        <div class="col-6">
+          <label for="inputfirstName" class="form-label">Driver FirstName</label>
+          <input type="text" class="form-control" id="inputfirstName" placeholder="" name="firstname" required>
+        </div>
+        <div class="col-6">
+            <label for="inputSurname" class="form-label">Driver  Surname</label>
+            <input type="text" class="form-control" id="inputSurname" placeholder="" name="surname" required>
+          </div>
+
+        <div class="col-6">
+          <label for="inputAge" class="form-label">Age</label>
+          <input type="text" class="form-control" id="inputAge" name="age" required>
+        </div>
+
+        <div class="col-md-6">
+            <label for="inputCar" class="form-label">Car</label>
+            <select id="inputCar" class="form-select" name="selected_car" required>
+                <option value="">Please Select a Car</option>
+                {% for car in car_list %}
+                    <option value="{{ car[0] }}">{{ car[1] }} - {{ car[2] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-6">
+            <label for="dateInput" class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" id="dateInput" name="birthday">
+            <div class="alert alert-warning">
+                Please enter your date of birth if you under 16.
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <label for="inputCar" class="form-label">Caregiver</label>
+            <select id="inputCar" class="form-select" name="selected_caregiver" >
+                <option value="">Please Select a Caregiver</option>
+                {% for caregiver in caregiver_list %}
+                    <option value="{{ caregiver[0] }}">{{ caregiver[1] }} {{ caregiver[2] }}</option>
+                {% endfor %}
+            </select>
+            <div class="alert alert-warning">
+                Please select a caregiver if you under 16.
+            </div>
+        </div>
+       
+        
+        
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        </div>
+        <!-- <div class="form-check mt-5">
+            <input type="checkbox" class="form-check-input" id="validationFormCheck1" required>
+            <label class="form-check-label" for="validationFormCheck1">Under 16 ?</label>
+            
+            <div class="invalid-feedback">
+                <label for="dateInput" class="form-label">Date of Birth</label>
+                <input type="date" class="form-control" id="dateInput" name="birthday">
+        </div> -->
+    </form>
+</div>
+
+{% endblock %}

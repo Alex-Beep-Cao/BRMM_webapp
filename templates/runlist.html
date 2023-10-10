@@ -47,30 +47,6 @@
     
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-    
-    const dropdownItems = document.querySelectorAll(".dropdown-menu li a");
-    const dropdownButton = document.getElementById("selected");
-
-    dropdownItems.forEach((item) => {
-        
-        item.addEventListener("click", () => {
-            const selectedValue = item.getAttribute("value");
-            const selectedName = item.innerHTML
-            dropdownButton.textContent = selectedName;
-            
-        });
-    });
-    const protocol = window.location.pathname;
-    if (protocol.includes ("/listruns/")){
-        const name = document.getElementById("driver-name-value").innerText
-        document.getElementById("selected").innerText = name
-    }
-
-});
-  
-</script>
 
 
 

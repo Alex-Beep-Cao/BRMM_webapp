@@ -1,0 +1,109 @@
+{% extends "admin.html" %}
+{% block content %}
+
+<h2>Driver Run Display</h2>
+
+
+
+<div class="container">
+        <form class="row g-3 was-validated" method="POST" action="/update">
+            <div class="col-md-4">
+                <label for="inputDrive" class="form-label">Driver</label>
+                
+                <select id="inputDrive" class="form-select" name="selected_driver" required>
+                    <option value="">Please Select a Driver</option>
+                    {% for driver in driver_name_list %}
+                        <option value="{{ driver[0] }}">{{ driver[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="inputCourse" class="form-label">Course</label>
+                
+                <select id="inputCourse" class="form-select" name="selected_course" required>
+                    <option value="">Please Select a Course</option>
+                    {% for course in course_list %}
+                        <option value="{{ course[0] }}">{{ course[0]  }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="inputRunNum" class="form-label">Run Number</label>
+                
+                <select id="inputRunNum" class="form-select" name="selected_run_num" required>
+                    <option value="">Please Select a Run</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+            <div class="col-4">
+              <label for="inputRunTime" class="form-label">Run times</label>
+              <input type="text" class="form-control" id="inputTime" placeholder="" name="time">
+            </div>
+            <div class="col-4">
+              <label for="inputCones" class="form-label">Cones</label>
+              <input type="text" class="form-control" id="inputCone" placeholder="" name="cone">
+            </div>
+            <div class="col-4">
+              <label for="inputWd" class="form-label">WD</label>
+              <input type="text" class="form-control" id="inputWd" name="wd">
+            </div>
+
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary btn-lg">Update</button>
+            </div>
+        </form>
+
+       
+
+        
+        <div class="row mt-5">
+            <div class="col dropdown">
+                <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span >Choose Driver Name</span><span class="caret"></span></a>
+                </button>
+                <ul class="dropdown-menu">
+                    {% for driverName in driver_name_list %}
+                     
+                        <li><a class="dropdown-item" href="{{ url_for('update',searchelement = driverName[0]) }}" id="driver-name-value" value="{{driverName[0]}}">{{ driverName[1] }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class=" col dropdown">
+                <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span >Choose Course</span><span class="caret"></span></a>
+                </button>
+                <ul class="dropdown-menu">
+                    {% for course in course_list %}
+                        <li><a class="dropdown-item" href="{{ url_for('update', searchelement = course[0]) }}" id="driver-name-value" value="{{course[0]}}">{{ course[0] }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <table class="table table-striped mt-3" id="runsTable" >
+        <tr>
+            <th scope="col">Dirver Id</th>
+            <th scope="col">Dirver Name</th>
+            <th scope="col">Course</th>
+            <th scope="col">Run Num</th>
+            <th scope="col">Seconds</th>
+            <th scope="col">Cones</th>
+            <th scope="col">WD</th>
+        </tr>
+        {% for run in run_list %}
+            <tr>
+                {% for field in run %}
+                    <td>{{field}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table> 
+        
+    
+</div>
+{% endblock %}

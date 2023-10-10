@@ -1,0 +1,33 @@
+{% extends "message.html" %}
+{% block content %}
+
+<h2>Success Message</h2>
+
+<!-- code to display list of courses-->
+<div class="container">
+  
+
+    <div class="alert alert-primary" role="alert">
+        <p>{{ message }}</p>
+   </div>
+
+   <table class="table table-striped mt-3" id="runsTable" >
+    <tr>
+        <th scope="col">Dirver Id</th>
+        <th scope="col">Dirver Name</th>
+        <th scope="col">Course</th>
+        <th scope="col">Run Num</th>
+        <th scope="col">Seconds</th>
+        <th scope="col">Cones</th>
+        <th scope="col">WD</th>
+    </tr>
+    {% for run in update_data %}
+        <tr>
+            {% for field in run %}
+                <td>{{field}}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+</table> 
+</div>
+{% endblock %}

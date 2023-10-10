@@ -1,0 +1,32 @@
+{% extends "admin.html" %}
+{% block content %}
+
+<h2>Search</h2>
+
+<div class="container">
+    <form class="d-flex" role="search" method="POST" action="/search">
+        <input class="form-control me-2" name="search_query" type="search" placeholder="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Driver</th>
+            <th scope="col">Driver Name</th>
+            <th scope="col">Date of Birth</th>
+            <th scope="col">Age</th>
+        </tr>
+        {% for driver in result_driver %}
+            <tr>
+                {% for field in driver %}
+                    <td>{{field}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+    
+    
+</div>
+
+{% endblock %}

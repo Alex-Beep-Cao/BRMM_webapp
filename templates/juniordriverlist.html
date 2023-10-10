@@ -1,0 +1,25 @@
+{% extends "admin.html" %}
+{% block content %}
+
+<h2>Junior Driver List</h2>
+
+<div class="container">
+    <table class="table table-striped">
+        <tr>
+            <th scope="col">Driver</th>
+            <th scope="col">Driver Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Caregiver</th>
+        </tr>
+        {% for junior_driver in junior_driver_list %}
+            <tr>
+                {% for field in junior_driver %}
+                    <td>{{field}}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
+

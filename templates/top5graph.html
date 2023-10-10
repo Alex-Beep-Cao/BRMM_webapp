@@ -5,24 +5,34 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 <body>
-    <h1>heading</h1>
-    <div id="myHBarPlot" style="width:100%; max-width:320px;"></div>
+    <h1>Top 5 Driver Result Graph</h1>
+    <div class="container">
+        <div id="myHBarPlot" style="width:100%; max-width:800px; margin-left:200px;"></div>
+    </div>
+   
+    
+ 
+    
 
     <script>
         // Note SPACE after each fruit name so gap before horizontal bars
-        const priceList = [7.25,8.50,3.45];
-        const fruitList = ['apple ','mango ','banana '];
+      
         // REPLACE constants above with passed in variables.
         // Use the '|safe' Jinja filter to mark them as safe (prevents your data being html-escaped). eg,
         // var myList = {{ list_from_py | safe }}
 
+        const nameList = {{ name_list| safe }}
+        const valueList = {{ value_list| safe }}
+
         // Define graph data
-        const data = [{ x: priceList,  y: fruitList,  type:"bar", orientation:"h", marker: {color:"pink"} }];
+        const data = [{ x: valueList,  y: nameList,  type:"bar", orientation:"h", marker: {color:"#1E90FF"} }];
 
         // Define graph layout. Excluded a y-axis title as fruit names are self-explanatory.
         const layout = {  
-            xaxis: {range: [0, 15], title: "cost"}, 
-            title: "something"
+            xaxis: {range: [0, 250], title: "total run time"}, 
+            yaxis :{title: "driver's name", tickangle : 310
+        },
+            title: "Top 5 Driver"
         };
 
         // Display using Plotly
