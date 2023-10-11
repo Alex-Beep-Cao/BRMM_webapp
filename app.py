@@ -29,7 +29,6 @@ def getCursor():
 def home():
     return render_template("base.html")
 
-
 @app.route("/listdrivers")
 def listdrivers():
     connection = getCursor()
@@ -230,6 +229,7 @@ def update(searchelement=None):
     
 @app.route('/add', methods=['GET', 'POST'])
 def add():
+ 
     if request.method == 'GET':
         connection = getCursor()
         connection.execute(
@@ -240,33 +240,116 @@ def add():
             "SELECT car_num, model, drive_class FROM car;")
         carList = connection.fetchall()
 
+        connection.execute(
+            "SELECT MAX(driver_id) FROM driver;")
+        max_driverId = connection.fetchall()
+
         return render_template('addnewdriver.html',car_list = carList, caregiver_list= caregiverList)   
 
     elif request.method == 'POST':
         # Add in table driver
-        # Validate AGE format INT, cannot be float or string
-        # Normal Age 
-        # Return TypeError - error page
-        # Return DB Error - error page
+        # Gather information
+        firstname_entered = request.form.get('firstname')
+        surname_entered = request.form.get('surname')
+        age_entered = request.form.get('age')
+        birthday_entered = request.form.get('birthday')
+        selected_caregiver = request.form.get('selected_caregiver')
+        selected_car = request.form.get('selected_car')
+        connection = getCursor()
+        connection.execute(
+            "SELECT MAX(driver_id) FROM driver;")
+        max_driverId = connection.fetchall()[0]
+        driverId = int(max_driverId[0]) + 1
 
-        # Junior 12-25 
-        # Validate AGE format INT, cannot be float or string
-        # Return TypeError - error page 
-        # Return AGE (12-25)but no DOB Error- error page
-        # Return AGE Not Match with DOB Error - error page
-        # Return No caregiver (<= 16) Error - error page
-        # Return DB Error - error page
+        courses= ["A","B","C","D","E","F"]
+        runs = [1, 2]
+        connection.execute("SELECT MAX(dr_id) FROM run;")
+        max_run_driverId = connection.fetchall()[0]
+        exist_check_Id = int(max_run_driverId[0])
 
-        # Driver id += 1
+        #Normal Age older than 25
+        if age_entered == '' or int(age_entered) > 25:
+            query = "INSERT INTO driver VALUES(%s, %s, %s, NULL, NULL, NULL, %s);"
+            try:
+                #Add into driver table
+                connection.execute(query,(driverId, firstname_entered, surname_entered,selected_car))
+                try:
+                    # Add in table run
+                    if (exist_check_Id < driverId):
+                        for course in courses:
+                            for run in runs:
+                                query = "INSERT INTO run VALUES(%s, %s, %s, NULL, NULL, 0);"
+                                values =(driverId, course, run)
+                                connection.execute(query, values)
 
-        # Add in table run
-        # Check existing Driver using dr_id
-        # Add run 2*7 = 14 with value NULL
-        # DB Error
+                    addDate = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
+                    Message =" Add driver and runs Successfully."
+                    return render_template('success.html', message = Message, update_data = addDate)
+                except:
+                    errorMessage ="Error during adding driver's runs into the run table."
+                    return render_template('error.html', error_message = errorMessage)
+                
+            except:
+                errorMessage ="Error during adding driver into the driver table."
+                return render_template('error.html', error_message = errorMessage) 
         
+        else: # Junior 12-25
+            # Validate AGE format INT, cannot be float or string
+            if validateIntType(age_entered):
+                age_entered = int(age_entered)
+                if age_entered >= 12 and age_entered <= 25: 
+                    # Return AGE (12-25)but no DOB Error- error page
+                    if(birthday_entered != ""):                   
+                        dob = datetime.strptime(birthday_entered, "%Y-%m-%d")
+                        current_date = datetime.now()
+                        age = current_date.year - dob.year - ((current_date.month, current_date.day) < (dob.month, dob.day))
+                        # Return AGE Not Match with DOB Error - error page
+                        if (age == age_entered):
+                            # Return No caregiver (<= 16) Error - error page
+                            if(age_entered <= 16):
+                                if(selected_caregiver != ''):
+                                    query = "INSERT INTO driver VALUES(%s, %s, %s, %s, %s, %s, %s);"
+                                    try:
+                                        connection.execute(query,(driverId, firstname_entered, surname_entered, birthday_entered, age_entered, selected_caregiver,selected_car))
+                                        try:
+                                            addRuns(exist_check_Id, driverId, courses, runs)
+                                            addDate = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
+                                            Message =" Add driver and runs Successfully."
+                                            return render_template('success.html', message = Message, update_data = addDate)
+                                        except:
+                                            errorMessage ="Error during adding driver's runs into the run table."
+                                            return render_template('error.html', error_message = errorMessage)
+                                    except:
+                                        errorMessage ="Error during adding driver into the driver table."
+                                        return render_template('error.html', error_message = errorMessage) 
+                                else:
+                                    errorMessage ="You age is under 16, please enter a caregiver."
+                                    return render_template('error.html', error_message = errorMessage)
+                            else:
+                                query = "INSERT INTO driver VALUES(%s, %s, %s, %s, %s, NULL, %s);"
+                                try:
+                                    connection.execute(query,(driverId, firstname_entered, surname_entered, birthday_entered, age_entered,selected_car))
+                                    try:
+                                        addRuns(exist_check_Id, driverId, courses, runs)
+                                        addDate = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
+                                        Message =" Add driver and runs Successfully."
+                                        return render_template('success.html', message = Message, update_data = addDate)
+                                    except:
+                                        errorMessage ="Error during adding driver's runs into the run table."
+                                        return render_template('error.html', error_message = errorMessage)
+                                except:
+                                    errorMessage ="Error during adding driver into the driver table."
+                                    return render_template('error.html', error_message = errorMessage) 
+                        else:
+                            errorMessage ="You age is not match with your date of birth, please re-enter."
+                            return render_template('error.html', error_message = errorMessage)
+                    else:
+                        errorMessage ="You age between 12 and 25, Please enter your DOB."
+                        return render_template('error.html', error_message = errorMessage)
+            else:
+                errorMessage ="Age cannot be letters."
+                return render_template('error.html', error_message = errorMessage)
         
-        Message =" Add Successfully."
-        return render_template('success.html', message = Message, update_data = updatedData) 
 
 def validateCheck(time, cone, wd):
     # Validate data type
@@ -346,3 +429,20 @@ def getOverAllData(courseTimeList):
         x[1], x[0]) if isinstance(x[1], float) else (float('inf'), x[0]))
     return sortedList
 
+
+def addRuns (exist_check_Id, driverId, courses, runs):
+    connection = getCursor()
+    if (exist_check_Id < driverId):
+        for course in courses:
+            for run in runs:
+                query = "INSERT INTO run VALUES(%s, %s, %s, NULL, NULL, 0);"
+                values =(driverId, course, run)
+                connection.execute(query, values)
+    
+def createList(id, name, courses, runs):
+    result = []
+    for course in courses:
+        for run in runs:
+            item = [id, name, course, run, 'NULL', 'NULL', 0]
+            result.append(item)
+    return result

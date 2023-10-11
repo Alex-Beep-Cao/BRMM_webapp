@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
     <!-- access Plotly content delivery network (CDN) charting library -->
@@ -10,10 +9,6 @@
         <div id="myHBarPlot" style="width:100%; max-width:800px; margin-left:200px;"></div>
     </div>
    
-    
- 
-    
-
     <script>
         // Note SPACE after each fruit name so gap before horizontal bars
       
@@ -30,8 +25,7 @@
         // Define graph layout. Excluded a y-axis title as fruit names are self-explanatory.
         const layout = {  
             xaxis: {range: [0, 250], title: "total run time"}, 
-            yaxis :{title: "driver's name", tickangle : 310
-        },
+            yaxis :{automargin: true, title: "driver name"},
             title: "Top 5 Driver"
         };
 
