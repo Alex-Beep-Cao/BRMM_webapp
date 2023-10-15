@@ -3,40 +3,30 @@
 <!-- driver_list is the variable passed in containing the list of drivers -->
 <!-- Add code to display a list of drivers -->
 
-<h2>overall result</h2>
 
-<div class="container">
-    <table class="table table-striped">
-        <tr>
-            <th scope="col">Driver</th>
-            <th scope="col">Course</th>
-            <th scope="col">Course Time</th>
-            
-        </tr>
+<h2 class="container mt-4">
+    <span class="badge bg-secondary"> Overall result</span>
+</h2>
 
-        {% for course_time in course_time_list %}
-            <tr>
-                <td>{{ course_time[0] }}</td>
-                <td>{{ course_time[1] }}</td>
-                <td>{{ course_time[2] }}</td>
-                
-            </tr>
-        {% endfor %}
-
-   </table>
-
+<div class="container mt-3">
     <table class="table table-striped">
         <tr>
             <th scope="col">Driver</th>
             <th scope="col">Driver Name</th>
             <th scope="col">Car Model</th>
+            <th scope="col">Course A</th>
+            <th scope="col">Course B</th>
+            <th scope="col">Course C</th>
+            <th scope="col">Course D</th>
+            <th scope="col">Course E</th>
+            <th scope="col">Course F</th>
             <th scope="col">Overall Result</th>
         </tr>
 
         {% for i in range (display_result|length) %} 
           <tr>
             {% if i == 0 %}
-                <th scope="col">{{ display_result[i][0] }}  </th>
+                <th scope="col">{{ display_result[i][0] }} </th>
             
             {% elif i > 0 and i <= 4 %}
                 <th scope="col">{{ display_result[i][0] }} md </th>
@@ -45,7 +35,22 @@
             {% endif %}
             <th scope="col">{{ display_result[i][2] }}</th>
             <th scope="col">{{ display_result[i][3] }}</th>
-            <th scope="col">{{ display_result[i][1] }}</th>
+            <th scope="col">{{ display_result[i][4] }}</th>
+            <th scope="col">{{ display_result[i][5] }}</th>
+            <th scope="col">{{ display_result[i][6] }}</th>
+            <th scope="col">{{ display_result[i][7] }}</th>
+            <th scope="col">{{ display_result[i][8] }}</th>
+            <th scope="col">{{ display_result[i][9] }}</th>
+            
+
+            {% if i == 0 %}
+            <th scope="col">{{  display_result[i][1] }} 🏆 </th>
+        
+            {% elif i > 0 and i <= 4 %}
+                <th scope="col">{{ display_result[i][1] }} 🎁 </th>
+            {% else %}
+                <th scope="col">{{ display_result[i][1] }}  </th>
+            {% endif %}
                 
           </tr>
 

@@ -1,10 +1,11 @@
 {% extends "message.html" %}
 {% block content %}
 
-<h2>Error Message</h2>
+<h2 class="container mt-4">
+    <span class="badge bg-secondary">Error Message</span>
+</h2>
 
-<!-- code to display list of courses-->
-<div class="container">
+<div class="container mt-3">
     <div class="alert alert-danger" role="alert">
         <p>{{ error_message }} </p>
     </div>

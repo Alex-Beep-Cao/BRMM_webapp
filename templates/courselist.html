@@ -1,11 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Course List</h2>
-<h3>current competition courses</h3>
+<h2 class="container mt-4">
+    <span class="badge bg-secondary">Course List</span>
+</h2>
+<h3 class="container mt-1">
+    <span class="badge bg-secondary">current competition courses</span>
+</h3>
 
 <!-- code to display list of courses-->
-<div class="container">
+<div class="container mt-3">
     <table class="table table-striped">
         <tr>
             <th scope="col">Course</th>
@@ -17,7 +21,7 @@
             <tr>
                 <td>{{ course[0] }} </td>
                 <td>{{ course[1] }}</td>
-                <td><img src="{{ url_for('static', filename=course[2]) }}" alt="course[2]" class="img-fluid" width="150" height="100">  </td>
+                <td><img src="{{ url_for('static', filename=course[2]) }}" alt="course[2]" class="rounded float-end" >  </td>
             </tr>
         {% endfor %}
     </table>

@@ -10,13 +10,25 @@
 
     <body>
          <nav>
-            <h1> Message Page</h1>
-
-            <ul>
-                <li><a href="{{ url_for('update') }}">Update Page</a></li>
-                <li><a href="{{ url_for('add') }}">Add Page</a></li>
-            </ul>
-          </nav>
+            <h1 class="text-center">Bankside Rakaia Motorkhana Mavens</h1>
+            <h2 class="text-center"> Competition event -  Message Hub </h2>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+              <div class="container">
+                <div class="collapse navbar-collapse" >
+                  <ul class="navbar-nav  mx-auto">
+                    <li class="nav-item  me-5">
+                      <a class="nav-link  active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+                    </li>
+                    <li class="nav-item  me-5">
+                      <a  class="nav-link" href="{{ url_for('update') }}">Update</a>
+                    </li>
+                    <li class="nav-item  me-5">
+                      <a class="nav-link" href="{{ url_for('add') }}">Add</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
           <section class="content">
             <header>
               {% block header %}{% endblock %}

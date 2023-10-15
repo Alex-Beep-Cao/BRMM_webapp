@@ -53,13 +53,13 @@ def listruns(driverid=None):
     connection = getCursor()
     if (driverid):
         query = (
-            "SELECT r.dr_id, CONCAT(first_name, ' ' ,surname), c.model, c.drive_class, r.crs_id, r.run_num, r.seconds, r.cones, r.wd, CAST(r.seconds AS DECIMAL(10, 2)) + COALESCE(CAST(r.cones AS SIGNED), 0) * 5 + CAST(r.wd AS SIGNED ) * 10 FROM run r inner join driver d on r.dr_id = d.driver_id left join car c on d.car = c.car_num left join course co on co.course_id = r.crs_id WHERE r.dr_id = %s;"
+            "SELECT r.dr_id, CONCAT(surname, ' ' ,first_name), c.model, c.drive_class, co.name, r.run_num, r.seconds, r.cones, r.wd, CAST(r.seconds AS DECIMAL(10, 2)) + COALESCE(CAST(r.cones AS SIGNED), 0) * 5 + CAST(r.wd AS SIGNED ) * 10 FROM run r inner join driver d on r.dr_id = d.driver_id left join car c on d.car = c.car_num left join course co on co.course_id = r.crs_id WHERE r.dr_id = %s;"
         )
         connection.execute(query, (driverid,))
         runList = connection.fetchall()
     else:
         query = (
-            "SELECT r.dr_id, CONCAT(first_name, ' ' ,surname), c.model, c.drive_class, r.crs_id, r.run_num, r.seconds, r.cones, r.wd, CAST(r.seconds AS DECIMAL(10, 2)) + COALESCE(CAST(r.cones AS SIGNED), 0) * 5 + CAST(r.wd AS SIGNED ) * 10 FROM run r inner join driver d on r.dr_id = d.driver_id left join car c on d.car = c.car_num left join course co on co.course_id = r.crs_id;"
+            "SELECT r.dr_id, CONCAT(surname, ' ' ,first_name), c.model, c.drive_class, co.name, r.run_num, r.seconds, r.cones, r.wd, CAST(r.seconds AS DECIMAL(10, 2)) + COALESCE(CAST(r.cones AS SIGNED), 0) * 5 + CAST(r.wd AS SIGNED ) * 10 FROM run r inner join driver d on r.dr_id = d.driver_id left join car c on d.car = c.car_num left join course co on co.course_id = r.crs_id;"
         )
         connection.execute(query,)
         runList = connection.fetchall()
@@ -127,7 +127,7 @@ def admin():
 @app.route("/listjuniordrivers")
 def listjuniordrivers():
     connection = getCursor()
-    connection.execute("SELECT d.driver_id, d.age, CONCAT(d.first_name, ' ' ,d.surname) AS driver_name, CONCAT(d1.first_name, ' ' ,d1.surname) AS caregiver_name "
+    connection.execute("SELECT d.driver_id, d.age, CONCAT(d.surname, ' ' ,d.first_name) AS driver_name, CONCAT(d1.first_name, ' ' ,d1.surname) AS caregiver_name "
                        "FROM driver d LEFT JOIN driver d1 "
                        "ON d.caregiver = d1.driver_id "
                        "WHERE d.age >= 12 and d.age <= 25 "
@@ -144,7 +144,7 @@ def search():
         search_query = request.form.get('search_query')
         connection = getCursor()
         # Example:
-        connection.execute("SELECT *  FROM driver WHERE first_name LIKE %s or surname LIKE %s;",
+        connection.execute("SELECT driver_id, CONCAT(surname, ' ' ,first_name), date_of_birth, age, caregiver, car FROM driver WHERE first_name LIKE %s or surname LIKE %s;",
                            ('%' + search_query + '%', '%' + search_query + '%',))
         result = connection.fetchall()
 
@@ -415,16 +415,20 @@ def getOverAllData(courseTimeList):
     for key, value in overall_result.items():
         item=[]
         if 'dnf' in value:
+            value_list=list(value)
             item.append(key)
             item.append('NQ')
-            item=item + driver_details[key]
+            item=item + driver_details[key] + value_list
+            
             displayResult.append(item)
         else:
             value_list=list(map(float, value))
             item.append(key)
             item.append(round(sum(value_list), 2))
-            item=item + driver_details[key]
+            item=item + driver_details[key] + value_list
+            
             displayResult.append(item)
+            
     sortedList=sorted(displayResult, key=lambda x: (
         x[1], x[0]) if isinstance(x[1], float) else (float('inf'), x[0]))
     return sortedList
@@ -446,3 +450,5 @@ def createList(id, name, courses, runs):
             item = [id, name, course, run, 'NULL', 'NULL', 0]
             result.append(item)
     return result
+
+

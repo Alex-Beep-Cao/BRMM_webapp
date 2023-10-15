@@ -1,12 +1,15 @@
-<!DOCTYPE html>
-<html>
+
+    {% extends "base.html" %}
+    {% block content %}
     <!-- access Plotly content delivery network (CDN) charting library -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   
+    <h2 class="container mt-4">
+    <span class="badge bg-secondary">Top 5 Driver Result Graph</span>
+    </h2>
 
-<body>
-    <h1>Top 5 Driver Result Graph</h1>
-    <div class="container">
-        <div id="myHBarPlot" style="width:100%; max-width:800px; margin-left:200px;"></div>
+    <div class="container mt-3">
+       <div id="myHBarPlot" style="width:100%; max-width:800px; margin-left:200px;"></div>
     </div>
    
     <script>
@@ -34,5 +37,5 @@
 
     </script>
 
-</body>
-</html>
+
+{% endblock %}

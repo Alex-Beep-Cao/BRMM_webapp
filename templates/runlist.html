@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Run List</h2>
+<h2 class="container mt-4">
+    <span class="badge bg-secondary"> Run List</span>
+</h2>
 
-
-
-<div class="container">
+<div class="container mt-3">
     <div class="row">
         <div class=" col dropdown">
             <button id="options" class="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -17,8 +17,6 @@
                 {% endfor %}
             </ul>
         </div>
-
-        
     </div>
 
     <table class="table table-striped mt-3" id="runsTable" >
@@ -42,9 +40,7 @@
                 
             </tr>
         {% endfor %}
-    </table> 
-        
-    
+    </table>       
 </div>
 
 
