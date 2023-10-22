@@ -19,12 +19,27 @@
         </div>
     </div>
 
+    {% if run_list|length != 0 %}
+    <div class="row mt-3">
+        <div class="col-auto"> <h5> Dirver Id:</h5>  </div>
+        <div class="col-auto">  <p class="d-inline">{{run_list[0][0]}}</p>  </div>
+    </div>
+    <div class="row">
+        <div class="col-auto"> <h5> Dirver Name:</h5>  </div>
+        <div class="col-auto">  <p class="d-inline">{{run_list[0][1]}}</p>  </div>
+    </div>
+    <div class="row">
+        <div class="col-auto"> <h5> Car Model:</h5>  </div>
+        <div class="col-auto">  <p class="d-inline">{{run_list[0][2]}}</p>  </div>
+    </div>
+    <div class="row">
+        <div class="col-auto"> <h5> Driver Class:</h5>  </div>
+        <div class="col-auto">  <p class="d-inline">{{run_list[0][3]}}</p>  </div>
+    </div>
+    
+    
     <table class="table table-striped mt-3" id="runsTable" >
         <tr>
-            <th scope="col">Dirver Id</th>
-            <th scope="col">Dirver Name</th>
-            <th scope="col">Car Model</th>
-            <th scope="col">Driver Class</th>
             <th scope="col">Course</th>
             <th scope="col">Run Num</th>
             <th scope="col">Seconds</th>
@@ -34,13 +49,25 @@
         </tr>
         {% for run in run_list %}
             <tr>
-                {% for field in run %}
-                    <td>{{field}}</td>
-                {% endfor %}
+               
+                <td>{{run[4]}}</td>
+                <td>{{run[5]}}</td>
+                <td>{{run[6]}}</td>
+                <td>{{run[7]}}</td>
+                {% if run[8] != 0 %}
+                    <td>WD</td>
+                {% else %}
+                    <td>{{run[8]}}</td>
+                {% endif %}
+                
+                <td>{{run[0]}}</td>
+               
                 
             </tr>
         {% endfor %}
-    </table>       
+    </table>  
+    {% endif %}
+         
 </div>
 
 

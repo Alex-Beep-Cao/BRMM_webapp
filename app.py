@@ -33,7 +33,7 @@ def home():
 def listdrivers():
     connection = getCursor()
     connection.execute(
-        "SELECT * FROM driver d left join car c on d.car = c.car_num;")
+        "SELECT * FROM driver d left join car c on d.car = c.car_num order by d.surname, d.first_name;")
     driverList = connection.fetchall()
 
     return render_template("driverlist.html", driver_list=driverList)
@@ -50,20 +50,15 @@ def listcourses():
 @app.route("/listruns")
 @app.route("/listruns/<driverid>")
 def listruns(driverid=None):
+    runList = []
     connection = getCursor()
     if (driverid):
         query = (
-            "SELECT r.dr_id, CONCAT(surname, ' ' ,first_name), c.model, c.drive_class, co.name, r.run_num, r.seconds, r.cones, r.wd, CAST(r.seconds AS DECIMAL(10, 2)) + COALESCE(CAST(r.cones AS SIGNED), 0) * 5 + CAST(r.wd AS SIGNED ) * 10 FROM run r inner join driver d on r.dr_id = d.driver_id left join car c on d.car = c.car_num left join course co on co.course_id = r.crs_id WHERE r.dr_id = %s;"
+            "SELECT r.dr_id, CONCAT(first_name, ' ' ,surname), c.model, c.drive_class, co.name, r.run_num, r.seconds, r.cones, r.wd, CAST(r.seconds AS DECIMAL(10, 2)) + COALESCE(CAST(r.cones AS SIGNED), 0) * 5 + CAST(r.wd AS SIGNED ) * 10 FROM run r inner join driver d on r.dr_id = d.driver_id left join car c on d.car = c.car_num left join course co on co.course_id = r.crs_id WHERE r.dr_id = %s;"
         )
         connection.execute(query, (driverid,))
         runList = connection.fetchall()
-    else:
-        query = (
-            "SELECT r.dr_id, CONCAT(surname, ' ' ,first_name), c.model, c.drive_class, co.name, r.run_num, r.seconds, r.cones, r.wd, CAST(r.seconds AS DECIMAL(10, 2)) + COALESCE(CAST(r.cones AS SIGNED), 0) * 5 + CAST(r.wd AS SIGNED ) * 10 FROM run r inner join driver d on r.dr_id = d.driver_id left join car c on d.car = c.car_num left join course co on co.course_id = r.crs_id;"
-        )
-        connection.execute(query,)
-        runList = connection.fetchall()
-
+   
     connection.execute(
         "SELECT driver_id, CONCAT(first_name, ' ' ,surname) FROM driver;")
     driverNameList = connection.fetchall()
@@ -127,7 +122,7 @@ def admin():
 @app.route("/listjuniordrivers")
 def listjuniordrivers():
     connection = getCursor()
-    connection.execute("SELECT d.driver_id, d.age, CONCAT(d.surname, ' ' ,d.first_name) AS driver_name, CONCAT(d1.first_name, ' ' ,d1.surname) AS caregiver_name "
+    connection.execute("SELECT d.driver_id, CONCAT(d.first_name, ' ' ,d.surname) AS driver_name, d.age, CONCAT(d1.first_name, ' ' ,d1.surname) AS caregiver_name "
                        "FROM driver d LEFT JOIN driver d1 "
                        "ON d.caregiver = d1.driver_id "
                        "WHERE d.age >= 12 and d.age <= 25 "
@@ -144,7 +139,7 @@ def search():
         search_query = request.form.get('search_query')
         connection = getCursor()
         # Example:
-        connection.execute("SELECT driver_id, CONCAT(surname, ' ' ,first_name), date_of_birth, age, caregiver, car FROM driver WHERE first_name LIKE %s or surname LIKE %s;",
+        connection.execute("SELECT driver_id, CONCAT(first_name, ' ' ,surname), date_of_birth, age, caregiver, car FROM driver WHERE first_name LIKE %s or surname LIKE %s;",
                            ('%' + search_query + '%', '%' + search_query + '%',))
         result = connection.fetchall()
 
@@ -191,7 +186,11 @@ def update(searchelement=None):
         wd = request.form.get('wd')
 
         try:
-            validateCheck(time, cone, wd)
+            result = validateCheck(time, cone, wd)
+            if (result == False):
+                errorMessage = "Value Error."
+                return render_template('error.html', error_message = errorMessage )
+
         except ValueError:
             errorMessage = "Value Error."
             return render_template('error.html', error_message = errorMessage )
@@ -251,29 +250,30 @@ def add():
         # Gather information
         firstname_entered = request.form.get('firstname')
         surname_entered = request.form.get('surname')
-        age_entered = request.form.get('age')
+        # age_entered = request.form.get('age')
         birthday_entered = request.form.get('birthday')
         selected_caregiver = request.form.get('selected_caregiver')
         selected_car = request.form.get('selected_car')
-        connection = getCursor()
-        connection.execute(
-            "SELECT MAX(driver_id) FROM driver;")
-        max_driverId = connection.fetchall()[0]
-        driverId = int(max_driverId[0]) + 1
-
+        
         courses= ["A","B","C","D","E","F"]
         runs = [1, 2]
+        connection = getCursor()
         connection.execute("SELECT MAX(dr_id) FROM run;")
         max_run_driverId = connection.fetchall()[0]
         exist_check_Id = int(max_run_driverId[0])
 
         #Normal Age older than 25
-        if age_entered == '' or int(age_entered) > 25:
-            query = "INSERT INTO driver VALUES(%s, %s, %s, NULL, NULL, NULL, %s);"
+        if birthday_entered == '' :
+            query = "INSERT INTO driver VALUES(NULL, %s, %s, NULL, NULL, NULL, %s);"
             try:
                 #Add into driver table
-                connection.execute(query,(driverId, firstname_entered, surname_entered,selected_car))
+                connection.execute(query,(firstname_entered, surname_entered, selected_car))
                 try:
+                    connection = getCursor()
+                    connection.execute(
+                        "SELECT MAX(driver_id) FROM driver;")
+                    max_driverId = connection.fetchall()[0]
+                    driverId = int(max_driverId[0])
                     # Add in table run
                     if (exist_check_Id < driverId):
                         for course in courses:
@@ -282,9 +282,9 @@ def add():
                                 values =(driverId, course, run)
                                 connection.execute(query, values)
 
-                    addDate = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
+                    addData = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
                     Message =" Add driver and runs Successfully."
-                    return render_template('success.html', message = Message, update_data = addDate)
+                    return render_template('success.html', message = Message, update_data = addData)
                 except:
                     errorMessage ="Error during adding driver's runs into the run table."
                     return render_template('error.html', error_message = errorMessage)
@@ -294,61 +294,49 @@ def add():
                 return render_template('error.html', error_message = errorMessage) 
         
         else: # Junior 12-25
-            # Validate AGE format INT, cannot be float or string
-            if validateIntType(age_entered):
-                age_entered = int(age_entered)
-                if age_entered >= 12 and age_entered <= 25: 
-                    # Return AGE (12-25)but no DOB Error- error page
-                    if(birthday_entered != ""):                   
-                        dob = datetime.strptime(birthday_entered, "%Y-%m-%d")
-                        current_date = datetime.now()
-                        age = current_date.year - dob.year - ((current_date.month, current_date.day) < (dob.month, dob.day))
-                        # Return AGE Not Match with DOB Error - error page
-                        if (age == age_entered):
-                            # Return No caregiver (<= 16) Error - error page
-                            if(age_entered <= 16):
-                                if(selected_caregiver != ''):
-                                    query = "INSERT INTO driver VALUES(%s, %s, %s, %s, %s, %s, %s);"
-                                    try:
-                                        connection.execute(query,(driverId, firstname_entered, surname_entered, birthday_entered, age_entered, selected_caregiver,selected_car))
-                                        try:
-                                            addRuns(exist_check_Id, driverId, courses, runs)
-                                            addDate = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
-                                            Message =" Add driver and runs Successfully."
-                                            return render_template('success.html', message = Message, update_data = addDate)
-                                        except:
-                                            errorMessage ="Error during adding driver's runs into the run table."
-                                            return render_template('error.html', error_message = errorMessage)
-                                    except:
-                                        errorMessage ="Error during adding driver into the driver table."
-                                        return render_template('error.html', error_message = errorMessage) 
-                                else:
-                                    errorMessage ="You age is under 16, please enter a caregiver."
-                                    return render_template('error.html', error_message = errorMessage)
-                            else:
-                                query = "INSERT INTO driver VALUES(%s, %s, %s, %s, %s, NULL, %s);"
-                                try:
-                                    connection.execute(query,(driverId, firstname_entered, surname_entered, birthday_entered, age_entered,selected_car))
-                                    try:
-                                        addRuns(exist_check_Id, driverId, courses, runs)
-                                        addDate = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
-                                        Message =" Add driver and runs Successfully."
-                                        return render_template('success.html', message = Message, update_data = addDate)
-                                    except:
-                                        errorMessage ="Error during adding driver's runs into the run table."
-                                        return render_template('error.html', error_message = errorMessage)
-                                except:
-                                    errorMessage ="Error during adding driver into the driver table."
-                                    return render_template('error.html', error_message = errorMessage) 
-                        else:
-                            errorMessage ="You age is not match with your date of birth, please re-enter."
-                            return render_template('error.html', error_message = errorMessage)
+            dob = datetime.strptime(birthday_entered, "%Y-%m-%d")
+            current_date = datetime.strptime('2023-01-01', "%Y-%m-%d")
+            age = current_date.year - dob.year - ((current_date.month, current_date.day) < (dob.month, dob.day))
+            if validateAge(age) :
+                if(age <= 16):
+                    if(selected_caregiver != ''):
+                        query = "INSERT INTO driver VALUES(NULL, %s, %s, %s, %s, %s, %s);"
+                        try:
+                            connection.execute(query,(firstname_entered, surname_entered, birthday_entered, age, selected_caregiver,selected_car))
+                            try:
+                                driverId = maxDriverId()
+                                addRuns(exist_check_Id, driverId, courses, runs)
+                                addData = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
+                                Message =" Add driver and runs Successfully."
+                                return render_template('success.html', message = Message, update_data = addData)
+                            except:
+                                errorMessage ="Error during adding driver's runs into the run table."
+                                return render_template('error.html', error_message = errorMessage)
+                        except:
+                            errorMessage ="Error during adding driver into the driver table."
+                            return render_template('error.html', error_message = errorMessage) 
                     else:
-                        errorMessage ="You age between 12 and 25, Please enter your DOB."
+                        errorMessage ="You age is under 16, please enter a caregiver."
                         return render_template('error.html', error_message = errorMessage)
+                else:
+                    query = "INSERT INTO driver VALUES(NULL, %s, %s, %s, %s, NULL, %s);"
+                    try:
+                        connection.execute(query,(firstname_entered, surname_entered, birthday_entered, age, selected_car))
+                        try:
+                            driverId = maxDriverId()
+                            addRuns(exist_check_Id, driverId, courses, runs)
+                            addData = createList(driverId, firstname_entered + " " + surname_entered, courses, runs)
+                            Message =" Add driver and runs Successfully."
+                            return render_template('success.html', message = Message, update_data = addData)
+                        except:
+                            errorMessage ="Error during adding driver's runs into the run table."
+                            return render_template('error.html', error_message = errorMessage)
+                    except:
+                        errorMessage ="Error during adding driver into the driver table."
+                        return render_template('error.html', error_message = errorMessage) 
             else:
-                errorMessage ="Age cannot be letters."
-                return render_template('error.html', error_message = errorMessage)
+                errorMessage ="Sorry, you are not able to join the competition."
+                return render_template('error.html', error_message = errorMessage) 
         
 
 def validateCheck(time, cone, wd):
@@ -364,7 +352,7 @@ def validateCheck(time, cone, wd):
     if (validateEmpty(cone)):
         if (validateIntType(cone)):
             cone=int(cone)
-            if (cone >= 0 or cone <= 15):
+            if (cone >= 0 or cone <= 25):
                 return True
 
      # Validate Wd
@@ -397,6 +385,11 @@ def validateIntType(value):
     except ValueError:
         return False
 
+def validateAge(value):
+    if(int(value) > 100 or int(value) < 12 ):
+        return False
+    else:
+        return True
 
 def getOverAllData(courseTimeList):
     overall_result={}
@@ -451,4 +444,10 @@ def createList(id, name, courses, runs):
             result.append(item)
     return result
 
-
+def maxDriverId():
+    connection = getCursor()
+    connection.execute(
+        "SELECT MAX(driver_id) FROM driver;")
+    max_driverId = connection.fetchall()[0]
+    driverId = int(max_driverId[0])
+    return driverId
