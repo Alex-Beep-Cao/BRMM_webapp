@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- driver_list is the variable passed in containing the list of drivers -->
-<!-- Add code to display a list of drivers -->
-
 
 <h2 class="container mt-4">
     <span class="badge bg-secondary"> Driver List</span>
@@ -20,20 +17,43 @@
             <th scope="col">Driver Class</th>
         </tr>
         {% for driver in driver_list %}
-        
             <tr>
-                <td>{{ driver[0] }} </td>
                 {% if  driver[4]|int >= 12 and driver[4]|int <= 25 and driver[4]|int != 0 %}
-                    <td ><a class="link-warning" href="{{ url_for('listruns',driverid = driver[0]) }}">{{ driver[1] }} {{ driver[2] }}</a></td>
+                    <td  class="table-warning">{{ driver[0] }} </td>
+                {% else %}
+                    <td>{{ driver[0] }} </td>
+                {% endif %}
+                {% if  driver[4]|int >= 12 and driver[4]|int <= 25 and driver[4]|int != 0 %}
+                    <td class="table-warning"><a href="{{ url_for('listruns',driverid = driver[0]) }}">{{ driver[1] }} {{ driver[2] }}</a></td>
                 {% else %}
                     <td ><a href="{{ url_for('listruns',driverid = driver[0]) }}">{{ driver[1] }} {{ driver[2] }}</a></td>
                 {% endif %}
-                <td>{{ driver[3] }}</td>
-                <td>{{ driver[4] }}</td>
-                <td>{{ driver[5] }}</td>
-                <td>{{ driver[8] }}</td>
-                <td>{{ driver[9] }}</td>
-            </tr>
+                {% if  driver[4]|int >= 12 and driver[4]|int <= 25 and driver[4]|int != 0 %}
+                    <td  class="table-warning">{{ driver[3] }} </td>
+                {% else %}
+                    <td>{{ driver[3] }} </td>
+                {% endif %}
+                {% if  driver[4]|int >= 12 and driver[4]|int <= 25 and driver[4]|int != 0 %}
+                    <td  class="table-warning">{{ driver[4] }} </td>
+                {% else %}
+                    <td>{{ driver[4] }} </td>
+                {% endif %}
+                {% if  driver[4]|int >= 12 and driver[4]|int <= 25 and driver[4]|int != 0 %}
+                    <td  class="table-warning">{{ driver[5] }} </td>
+                {% else %}
+                    <td>{{ driver[5] }} </td>
+                {% endif %}
+                {% if  driver[4]|int >= 12 and driver[4]|int <= 25 and driver[4]|int != 0 %}
+                    <td  class="table-warning">{{ driver[8] }} </td>
+                {% else %}
+                    <td>{{ driver[8] }} </td>
+                {% endif %}
+                {% if  driver[4]|int >= 12 and driver[4]|int <= 25 and driver[4]|int != 0 %}
+                    <td  class="table-warning">{{ driver[9] }} </td>
+                {% else %}
+                    <td>{{ driver[9] }} </td>
+                {% endif %}
+                </tr>
         {% endfor %}
     </table>
 </div>

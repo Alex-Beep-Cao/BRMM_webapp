@@ -38,6 +38,7 @@
                     <option value="2">2</option>
                 </select>
             </div>
+            
             <div class="col-4">
               <label for="inputRunTime" class="form-label">Run times</label>
               <input type="text" class="form-control" id="inputTime" placeholder="" name="time">
@@ -52,16 +53,13 @@
             </div>
 
             <div class="col-12">
-              <button type="submit" class="btn btn-primary btn-lg">Update</button>
+              <button type="submit" class="btn btn-outline-primary btn-lg">Update</button>
             </div>
-        </form>
-
-       
-
+        </form>   
         
         <div class="row mt-5">
             <div class="col dropdown">
-                <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-outline-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span >Choose Driver Name</span><span class="caret"></span></a>
                 </button>
                 <ul class="dropdown-menu">
@@ -72,7 +70,7 @@
                 </ul>
             </div>
             <div class=" col dropdown">
-                <button class="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-outline-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <span >Choose Course</span><span class="caret"></span></a>
                 </button>
                 <ul class="dropdown-menu">
@@ -81,8 +79,7 @@
                     {% endfor %}
                 </ul>
             </div>
-
-        </div>
+         </div>
     </div>
 
     <table class="table table-striped mt-3" id="runsTable" >
@@ -103,7 +100,5 @@
             </tr>
         {% endfor %}
     </table> 
-        
-    
 </div>
 {% endblock %}

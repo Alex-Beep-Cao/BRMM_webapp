@@ -8,7 +8,7 @@
 <div class="container mt-3">
     <div class="row">
         <div class=" col dropdown">
-            <button id="options" class="btn btn-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <button id="options" class="btn btn-outline-primary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <span id="selected">Choose option</span><span class="caret"></span></a>
             </button>
             <ul class="dropdown-menu">
@@ -36,8 +36,7 @@
         <div class="col-auto"> <h5> Driver Class:</h5>  </div>
         <div class="col-auto">  <p class="d-inline">{{run_list[0][3]}}</p>  </div>
     </div>
-    
-    
+ 
     <table class="table table-striped mt-3" id="runsTable" >
         <tr>
             <th scope="col">Course</th>
@@ -49,7 +48,6 @@
         </tr>
         {% for run in run_list %}
             <tr>
-               
                 <td>{{run[4]}}</td>
                 <td>{{run[5]}}</td>
                 <td>{{run[6]}}</td>
@@ -58,19 +56,12 @@
                     <td>WD</td>
                 {% else %}
                     <td>{{run[8]}}</td>
-                {% endif %}
-                
-                <td>{{run[0]}}</td>
-               
-                
+                {% endif %}              
+                <td>{{run[9]}}</td>
             </tr>
         {% endfor %}
     </table>  
-    {% endif %}
-         
+    {% endif %}        
 </div>
-
-
-
 
 {% endblock %}
