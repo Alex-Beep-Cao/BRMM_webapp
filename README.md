@@ -33,20 +33,20 @@ drive_class VARCHAR(3) NOT NULL
 );
 
 o Which line of SQL code sets up the relationship between the car and driver tables?
--FOREIGN KEY (caregiver) REFERENCES driver(driver_id)
+- FOREIGN KEY (caregiver) REFERENCES driver(driver_id)
 
 o Which 3 lines of SQL code insert the Mini and GR Yaris details into the car table?
--INSERT INTO car VALUES
+- INSERT INTO car VALUES
 (11,'Mini','FWD'),
 (17,'GR Yaris','4WD');
 
 o Suppose the club wanted to set a default value of ‘RWD’ for the driver_class field. What specific change would you need to make to the SQL to do this? (Do not implement this change in your app.)
--Update car Set drive_class = 'RWD';
+- Update car Set drive_class = 'RWD';
 
 o Suppose logins were implemented. Why is it important for drivers and the club admin to access different routes? As part of your answer, give two specific examples of problems
 that could occur if all of the web app facilities were available to everyone.
--1. Data Privacy and Security Concerns： If administrators and participants use the same route, there is a possibility of information leakage, which could lead to unfair competition.
--eg: driver don't need to have search function, add or update function if they do, they might update their own score, which is not fair.
+- 1. Data Privacy and Security Concerns： If administrators and participants use the same route, there is a possibility of information leakage, which could lead to unfair competition.
+- eg: driver don't need to have search function, add or update function if they do, they might update their own score, which is not fair.
    
--4. Operational Chaos: When all users have access to all web application functionalities, it can potentially lead to operational chaos. Drivers and club administrators have distinct roles and responsibilities, requiring specific tools to support their tasks.
--eg: drivers only need to see their score and overall result, but admin needs have update, add .... functions to manage the event.
+- 2. Operational Chaos: When all users have access to all web application functionalities, it can potentially lead to operational chaos. Drivers and club administrators have distinct roles and responsibilities, requiring specific tools to support their tasks.
+- eg: drivers only need to see their score and overall result, but admin needs have update, add .... functions to manage the event.
