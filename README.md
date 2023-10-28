@@ -36,23 +36,39 @@ Flask page inheritance helps create a consistent, maintainable, and efficient we
 
 ## Database question
 o What SQL statement creates the car table and defines its three fields/columns? (Copy and paste the relevant lines of SQL.)
-- CREATE TABLE IF NOT EXISTS car
+
+ ```sql
+CREATE TABLE IF NOT EXISTS car
 (
 car_num INT PRIMARY KEY NOT NULL,
 model VARCHAR(20) NOT NULL,
 drive_class VARCHAR(3) NOT NULL
 );
+```
 
 o Which line of SQL code sets up the relationship between the car and driver tables?
-- FOREIGN KEY (caregiver) REFERENCES driver(driver_id)
+```sql
+FOREIGN KEY (car) REFERENCES car(car_num)
+ON UPDATE CASCADE
+ON DELETE CASCADE
+```
 
 o Which 3 lines of SQL code insert the Mini and GR Yaris details into the car table?
-- INSERT INTO car VALUES
+```sql
+ INSERT INTO car VALUES
 (11,'Mini','FWD'),
 (17,'GR Yaris','4WD');
+```
 
 o Suppose the club wanted to set a default value of ‘RWD’ for the driver_class field. What specific change would you need to make to the SQL to do this? (Do not implement this change in your app.)
-- Update car Set drive_class = 'RWD';
+```sql
+CREATE TABLE IF NOT EXISTS car
+(
+car_num INT PRIMARY KEY NOT NULL,
+model VARCHAR(20) NOT NULL,
+drive_class VARCHAR(3) NOT NULL DEFAULT 'RWD'
+);
+```
 
 o Suppose logins were implemented. Why is it important for drivers and the club admin to access different routes? As part of your answer, give two specific examples of problems
 that could occur if all of the web app facilities were available to everyone.
