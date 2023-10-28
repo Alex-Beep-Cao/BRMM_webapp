@@ -3,8 +3,19 @@
 ## Web application structure
  Each block has 3 sections , first line is HTML page, second is route and third is data passed in to the html page.
 
-![image](https://github.com/Alex-Beep-Cao/BRMM_webapp/assets/65649144/6b06a170-a831-4ccb-8a0c-1d2bd9bc1223)
+![image](https://github.com/Alex-Beep-Cao/BRMM_webapp/assets/65649144/b6eaef22-2405-4051-97e4-873922c4b8fb)
 
+
+### NOTES:
+#### LEFT side：
+All routes related page under BASE.HTML which is left side of the struture graph, Read method is GET.
+Fetching data from Database base on parmeters, using sql query to filter that data and render to HTML page. 
+
+#### RIGHT side：
+Junior driver list only GET data from Database
+The rest page all have BOTH GET and POST method.
+POST is updating data into the corrperation Database table and fields using sql query. 
+After POST, we using GET method to fetch newest data from Database and display into HTML.
 
 ## Assumptions
 1. We don't have a defined age threshold. We need a cutoff date to calculate the participants' ages.
